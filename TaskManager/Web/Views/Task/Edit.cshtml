@@ -1,0 +1,17 @@
+﻿@model TaskManager.Models.TaskModel
+@{
+Layout = null;
+var priorities = (List<TaskManager.Core.Entities.PriorityModel>)ViewBag.Priorities;
+}
+<form method="post" action="@Url.Action("Edit", "Task")">
+    @Html.AntiForgeryToken()
+
+    <label for="editDescription">Descripción:</label>
+    <input type="text" id="Description" name="Description" value="@Model.Description" required />
+
+    <label for="editPriority">Prioridad:</label>
+    @Html.DropDownList("Priority", new SelectList(priorities, "ID", "PriorityName"), "Seleccione una prioridad", new { required = true })
+    @Html.HiddenFor(m => m.ID)
+    <button type="submit">Guardar cambios</button>
+</form>
+<button onclick="closeDetails()">Cancelar</button>

@@ -1,0 +1,20 @@
+﻿@using System.Web.Mvc.Html
+@model TaskManager.Models.TaskModel
+
+@{ 
+    var priorities = ViewBag.Priorities;
+
+}
+
+<h3>Create New Task</h3>
+@using (Html.BeginForm("Create", "Task", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div style="background:white ;display: flex; align-items: center; border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+    @Html.TextBoxFor(m => m.Description, new { required = "required", PlaceHolder = "Descripción", style = "flex-grow: 1; border: none; outline: none; padding: 10px; margin-right: 5px;" })
+    @Html.DropDownList("Priority", new SelectList(priorities, "ID", "PriorityName"), "Seleccione una prioridad", new { style = "border: none; outline: none; padding: 10px; margin-right: 5px;", required = true })
+
+    <button type="submit" style="border: none; outline: none; padding: 10px; background-color: #4CAF50; color: white; cursor: pointer;">Agregar Tarea</button>
+</div>
+}

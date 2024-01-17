@@ -1,0 +1,10 @@
+﻿@model TaskManager.Models.TaskModel
+@{ 
+    Layout = null;
+    var priorities = (List<TaskManager.Core.Entities.PriorityModel>)ViewBag.Priorities;
+}
+<div id="taskDetailsContainer" data-id="@Model.ID">
+    <h3>@Model.Description</h3>
+    <p>Prioridad: @priorities.Find(p => p.ID == Model.Priority).PriorityName;</p>
+    <p>Fecha de Creación: @Model.CreationDate</p>
+</div>

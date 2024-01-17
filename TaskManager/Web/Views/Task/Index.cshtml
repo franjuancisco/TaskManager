@@ -1,0 +1,84 @@
+﻿@using TaskManager.Models
+@model List<TaskManager.Models.TaskModel>
+
+<div class="container">
+    <h2>Task List</h2>
+    
+    <div>
+        @Html.Partial("Create", new TaskModel())
+    </div>
+
+    <div id="task-list">
+        @foreach (var task in Model)
+        {
+            @Html.Partial("_Task", task)
+        }
+    </div>
+
+    <div id="taskModal" style="display: none;">
+        <div id="taskDetailContainer"></div>
+        <div class="modalButton" id="editButton" onclick="showEditForm()">Editar</div>
+        <div class="modalButton" onclick="deleteTask()">Eliminar</div>
+        <div class="modalButton" onclick="closeDetails()">Cerrar</div>
+        <div class="editForm" id="editFormContainer">
+        </div>
+    </div>
+</div>
+<script>
+    function showDetails(taskId) {
+        var taskDetailsContainer = document.getElementById('taskDetailContainer');
+        fetch('/Task/Detail?taskId=' + taskId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            taskDetailsContainer.innerHTML = data;
+            document.getElementById('taskModal').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error fetching task details:', error);
+        });
+    }
+
+    function showEditForm() {
+        var taskId = document.getElementById('taskDetailsContainer').dataset.id;
+        var editFormContainer = document.getElementById('editFormContainer');
+        fetch('/Task/Edit?id=' + taskId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.text())
+            .then(data => {
+                editFormContainer.innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error fetching task details:', error);
+            });
+        document.getElementById('taskDetailsContainer').style.display = 'none';
+        editFormContainer.style.display = 'block';
+    }
+
+    function closeDetails() {
+        document.getElementById('taskDetailsContainer').style.display = 'block';
+        document.getElementById('editFormContainer').style.display = 'none';
+        document.getElementById('taskModal').style.display = 'none';
+    }
+
+    function deleteTask() {
+        var taskId = document.getElementById('taskDetailsContainer').dataset.id;
+        fetch('/Task/Deactivate?id=' + taskId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(data => { 
+            document.getElementById(taskId).remove();
+        })
+        closeDetails();
+    }
+</script>
